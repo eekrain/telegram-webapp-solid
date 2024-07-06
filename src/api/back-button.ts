@@ -1,37 +1,37 @@
-import { createEffect, onCleanup } from 'solid-js'
-import { useTelegramAPI } from '../context/context'
-import { createHapticImpact } from './haptic'
+import { createEffect, onCleanup } from "solid-js";
+import { createTelegramHapticImpact } from "./haptic";
+import { useTelegramAPI } from "../context";
 
-export type UseBackButtonProps = {
-  onClick?: () => void
-  show?: boolean
-  hapticForce?: Parameters<typeof createHapticImpact>[0]
-}
+export type UseTelegramBackButtonProps = {
+  onClick?: () => void;
+  show?: boolean;
+  hapticForce?: Parameters<typeof createTelegramHapticImpact>[0];
+};
 
-export function useBackButton(props: UseBackButtonProps) {
-  const { backButton } = useTelegramAPI()
-  const hapticSignal = createHapticImpact(props.hapticForce)
+export function useTelegramBackButton(props: UseTelegramBackButtonProps) {
+  const { backButton, TelegramInstance } = useTelegramAPI();
+  const hapticSignal = createTelegramHapticImpact(props.hapticForce);
 
-  backButton.setVisible((visible) => props.show ?? visible)
+  backButton.setVisible((visible) => props.show ?? visible);
 
   function handleClick() {
     if (props.hapticForce && hapticSignal) {
-      hapticSignal()
+      hapticSignal();
     }
-    props.onClick()
+    if (props.onClick) props.onClick();
   }
 
   createEffect(function updateOnClick() {
     if (props.onClick) {
-      window.Telegram.WebApp.BackButton.onClick(handleClick)
+      TelegramInstance()?.WebApp.BackButton.onClick(handleClick);
     } else {
-      window.Telegram.WebApp.BackButton.offClick(handleClick)
+      TelegramInstance()?.WebApp.BackButton.offClick(handleClick);
     }
-  })
+  });
 
   onCleanup(() => {
-    window.Telegram.WebApp.BackButton.offClick(handleClick)
-  })
+    TelegramInstance()?.WebApp.BackButton.offClick(handleClick);
+  });
 
-  return backButton
+  return backButton;
 }

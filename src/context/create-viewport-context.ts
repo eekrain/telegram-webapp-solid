@@ -1,37 +1,43 @@
-import { createSignal, onCleanup } from 'solid-js'
+import { Accessor, createSignal, onCleanup } from "solid-js";
 
-export type ViewportContext = ReturnType<typeof createViewportContext>
+export type ViewportContext = ReturnType<typeof createViewportContext>;
 
-export function createViewportContext() {
+export const createViewportContext = (
+  TelegramInstance: Accessor<Telegram | null>,
+) => {
   const [expanded, setExpanded] = createSignal(
-    window.Telegram.WebApp.isExpanded,
-  )
+    TelegramInstance()?.WebApp.isExpanded,
+  );
   const [viewportHeight, setViewportHeight] = createSignal(
-    window.Telegram.WebApp.viewportHeight,
-  )
+    TelegramInstance()?.WebApp.viewportHeight,
+  );
   const [viewportStableHeight, setViewportStableHeight] = createSignal(
-    window.Telegram.WebApp.viewportStableHeight,
-  )
+    TelegramInstance()?.WebApp.viewportStableHeight,
+  );
 
-  function updateViewport(isStable: boolean) {
-    if (isStable) {
-      setExpanded(window.Telegram.WebApp.isExpanded)
-      setViewportStableHeight(window.Telegram.WebApp.viewportStableHeight)
+  function updateViewport(isStateStable: boolean) {
+    if (isStateStable) {
+      setExpanded(TelegramInstance()?.WebApp.isExpanded);
+      setViewportStableHeight(TelegramInstance()?.WebApp.viewportStableHeight);
     }
 
-    setViewportHeight(window.Telegram.WebApp.viewportHeight)
+    setViewportHeight(TelegramInstance()?.WebApp.viewportHeight);
   }
 
-  window.Telegram.WebApp.onEvent('viewportChanged', updateViewport)
+  TelegramInstance()?.WebApp.onEvent("viewportChanged", (e) =>
+    updateViewport(e.isStateStable),
+  );
 
   onCleanup(() => {
-    window.Telegram.WebApp.offEvent('viewportChanged', updateViewport)
-  })
+    TelegramInstance()?.WebApp.offEvent("viewportChanged", (e) =>
+      updateViewport(e.isStateStable),
+    );
+  });
 
   return {
     expanded,
-    expand: () => window.Telegram.WebApp.expand(),
+    expand: () => TelegramInstance()?.WebApp.expand(),
     viewportHeight,
     viewportStableHeight,
-  }
-}
+  };
+};

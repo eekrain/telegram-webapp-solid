@@ -1,19 +1,19 @@
-import { createEffect, onCleanup, useContext } from 'solid-js'
-import { createHapticImpact } from '../api/haptic'
-import { useMainButton } from '../api/main-button'
+import { createEffect, onCleanup } from "solid-js";
+import { createTelegramHapticImpact } from "../api/haptic";
+import { useTelegramMainButton } from "../api/main-button";
 
-export type MainButtonProps = {
-  onClick?: () => void
-  text?: string
-  active?: boolean
-  progressVisible?: boolean
-  mandatory?: boolean
-  onMandatoryChange?: (mandatory: boolean) => void
-  hapticForce?: Parameters<typeof createHapticImpact>[0]
-}
+export type TelegramMainButtonProps = {
+  onClick?: () => void;
+  text?: string;
+  active?: boolean;
+  progressVisible?: boolean;
+  mandatory?: boolean;
+  onMandatoryChange?: (mandatory: boolean) => void;
+  hapticForce?: Parameters<typeof createTelegramHapticImpact>[0];
+};
 
-export function MainButton(props: MainButtonProps) {
-  const mainButton = useMainButton({
+export function TelegramMainButton(props: TelegramMainButtonProps) {
+  const mainButton = useTelegramMainButton({
     onClick: props.onClick,
     text: props.text,
     hapticForce: props.hapticForce,
@@ -21,27 +21,27 @@ export function MainButton(props: MainButtonProps) {
     progressVisible: props.progressVisible,
     mandatory: props.mandatory,
     show: true,
-  })
+  });
 
   createEffect(() => {
-    props.onMandatoryChange?.(mainButton.mandatory())
-  })
+    props.onMandatoryChange?.(mainButton.mandatory());
+  });
 
   onCleanup(() => {
-    console.log('main button cleanup, we hide')
-    mainButton.setVisible(false)
-    mainButton.setActive(true)
-    mainButton.setProgressVisible(false)
-    mainButton.setText(null)
-    mainButton.setMandatory(false)
-  })
+    console.log("main button cleanup, we hide");
+    mainButton.setVisible(false);
+    mainButton.setActive(true);
+    mainButton.setProgressVisible(false);
+    mainButton.setText(null);
+    mainButton.setMandatory(false);
+  });
 
   createEffect(() => {
-    mainButton.setActive(props.active)
-    mainButton.setProgressVisible(props.progressVisible)
-    mainButton.setText(props.text)
-    mainButton.setMandatory(props.mandatory)
-  })
+    mainButton.setActive(props.active);
+    mainButton.setProgressVisible(props.progressVisible);
+    mainButton.setText(props.text || "");
+    mainButton.setMandatory(props.mandatory || false);
+  });
 
-  return null
+  return null;
 }

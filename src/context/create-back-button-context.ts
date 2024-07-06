@@ -1,22 +1,24 @@
-import { createSignal, createEffect } from 'solid-js'
+import { createSignal, createEffect, Accessor } from "solid-js";
 
-export type BackButtonContext = ReturnType<typeof createBackButtonContext>
+export type BackButtonContext = ReturnType<typeof createBackButtonContext>;
 
-export function createBackButtonContext() {
+export const createBackButtonContext = (
+  TelegramInstance: Accessor<Telegram | null>,
+) => {
   const [visible, setVisible] = createSignal(
-    window.Telegram.WebApp.BackButton.isVisible,
-  )
+    TelegramInstance()?.WebApp.BackButton.isVisible,
+  );
 
   createEffect(function updateVisibility() {
     if (visible()) {
-      window.Telegram.WebApp.BackButton.show()
+      TelegramInstance()?.WebApp.BackButton.show();
     } else {
-      window.Telegram.WebApp.BackButton.hide()
+      TelegramInstance()?.WebApp.BackButton.hide();
     }
-  })
+  });
 
   return {
     visible,
     setVisible,
-  }
-}
+  };
+};

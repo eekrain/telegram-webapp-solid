@@ -1,40 +1,41 @@
-import { createSignal, mergeProps, Show } from 'solid-js'
-import { JSX } from 'solid-js/jsx-runtime'
-import { Popup, PopupProps } from './popup'
+import { createSignal, mergeProps, Show } from "solid-js";
+import { JSX } from "solid-js/jsx-runtime";
+import { TelegramPopup, TelegramPopupProps } from "./popup";
 
-export type PopupButtonProps = JSX.ButtonHTMLAttributes<HTMLButtonElement> &
-  PopupProps & {
-    children: JSX.Element
-    onPopupClose?: (buttonId: string) => void
-  }
+export type TelegramPopupButtonProps =
+  JSX.ButtonHTMLAttributes<HTMLButtonElement> &
+    TelegramPopupProps & {
+      children: JSX.Element;
+      onPopupClose?: (buttonId: string) => void;
+    };
 
-export function PopupButton(props: PopupButtonProps) {
-  let [showPopup, setShowPopup] = createSignal(false)
+export function TelegramPopupButton(props: TelegramPopupButtonProps) {
+  let [showPopup, setShowPopup] = createSignal(false);
 
   const merged = mergeProps(props, {
-    onClick: (e) => {
-      setShowPopup(true)
+    onClick: (e: any) => {
+      setShowPopup(true);
 
-      if (props.onClick && typeof props.onClick == 'function') {
-        props.onClick(e)
+      if (props.onClick && typeof props.onClick == "function") {
+        props.onClick(e);
       }
     },
-  })
+  });
 
   return (
     <>
       <button {...merged}>{props.children}</button>
       <Show when={showPopup()}>
-        <Popup
+        <TelegramPopup
           message={props.message}
           buttons={props.buttons}
           title={props.title}
           onButtonClick={(id) => {
-            props.onPopupClose?.(id)
-            setShowPopup(false)
+            props.onPopupClose?.(id);
+            setShowPopup(false);
           }}
         />
       </Show>
     </>
-  )
+  );
 }

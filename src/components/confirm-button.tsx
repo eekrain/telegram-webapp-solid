@@ -1,38 +1,39 @@
-import { createSignal, mergeProps, Show } from 'solid-js'
-import { JSX } from 'solid-js/jsx-runtime'
-import { Confirm } from './Confirm'
+import { createSignal, mergeProps, Show } from "solid-js";
+import { JSX } from "solid-js/jsx-runtime";
+import { TelegramConfirm } from "./confirm";
 
-export type ConfirmButtonProps = JSX.ButtonHTMLAttributes<HTMLButtonElement> & {
-  children: JSX.Element
-  message: string
-  onClose?: (pressedTrue) => void
-}
+export type TelegramConfirmButtonProps =
+  JSX.ButtonHTMLAttributes<HTMLButtonElement> & {
+    children: JSX.Element;
+    message: string;
+    onClose?: (pressedTrue: boolean) => void;
+  };
 
-export function ConfirmButton(props: ConfirmButtonProps) {
-  let [showConfirm, setShowConfirm] = createSignal(false)
+export function TelegramConfirmButton(props: TelegramConfirmButtonProps) {
+  let [showConfirm, setShowConfirm] = createSignal(false);
 
   const merged = mergeProps(props, {
-    onClick: (e) => {
-      setShowConfirm(true)
+    onClick: (e: any) => {
+      setShowConfirm(true);
 
-      if (props.onClick && typeof props.onClick == 'function') {
-        props.onClick(e)
+      if (props.onClick && typeof props.onClick == "function") {
+        props.onClick(e);
       }
     },
-  })
+  });
 
   return (
     <>
       <button {...merged}>{props.children}</button>
       <Show when={showConfirm()}>
-        <Confirm
+        <TelegramConfirm
           message={props.message}
           onButtonClick={(pressedTrue) => {
-            props.onClose?.(pressedTrue)
-            setShowConfirm(false)
+            props.onClose?.(pressedTrue);
+            setShowConfirm(false);
           }}
         />
       </Show>
     </>
-  )
+  );
 }

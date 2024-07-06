@@ -1,19 +1,27 @@
+import { useTelegramAPI } from "../context";
+
 export type HapticForce = Parameters<
-  typeof window.Telegram.WebApp.HapticFeedback.impactOccurred
->[0]
+  WebApp["HapticFeedback"]["impactOccurred"]
+>[0];
 
-export function hapticImpact(force: HapticForce) {
-  window.Telegram.WebApp.HapticFeedback.impactOccurred(force)
+export const useTelegramHapticImpact = () => {
+  const { TelegramInstance } = useTelegramAPI();
+  return (force?: HapticForce) => {
+    if (force) TelegramInstance()?.WebApp.HapticFeedback.impactOccurred(force);
+  };
+};
+
+export const useTelegramHapticSelection = () => {
+  const { TelegramInstance } = useTelegramAPI();
+  return () => TelegramInstance()?.WebApp.HapticFeedback.selectionChanged();
+};
+
+export function createTelegramHapticImpact(force?: HapticForce) {
+  const hapticImpact = useTelegramHapticImpact();
+  return () => hapticImpact(force);
 }
 
-export function hapticSelection() {
-  window.Telegram.WebApp.HapticFeedback.selectionChanged()
-}
-
-export function createHapticImpact(force: HapticForce) {
-  return () => hapticImpact(force)
-}
-
-export function createHapticSelection() {
-  return () => hapticSelection()
+export function createTelegramHapticSelection() {
+  const hapticSelection = useTelegramHapticSelection();
+  return () => hapticSelection();
 }

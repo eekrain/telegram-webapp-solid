@@ -1,9 +1,12 @@
-export const ready = window.Telegram.WebApp.ready
-export const close = window.Telegram.WebApp.close
+import { useTelegramAPI } from "../context";
 
-export function useLifecycle() {
+export function useTelegramLifecycle() {
+  const { TelegramInstance } = useTelegramAPI();
+  const ready = () => TelegramInstance()?.WebApp.ready();
+  const close = () => TelegramInstance()?.WebApp.close();
+
   return {
     ready,
     close,
-  }
+  };
 }

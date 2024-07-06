@@ -1,21 +1,21 @@
-import { createEffect } from 'solid-js'
-import { useTelegramAPI } from '../context/context'
+import { createEffect } from "solid-js";
+import { useTelegramAPI } from "../context";
 
-export function useViewport(props?: {
-  onExpand?: () => void
-  onCollapse?: () => void
+export function useTelegramViewport(props?: {
+  onExpand?: () => void;
+  onCollapse?: () => void;
 }) {
-  const { viewport } = useTelegramAPI()
+  const { viewport } = useTelegramAPI();
 
   createEffect(() => {
-    const expanded = viewport.expanded()
+    const expanded = viewport.expanded();
     if (expanded && props?.onExpand) {
-      props.onExpand()
+      props.onExpand();
     }
     if (!expanded && props?.onCollapse) {
-      props.onCollapse()
+      props.onCollapse();
     }
-  })
+  });
 
-  return viewport
+  return viewport;
 }

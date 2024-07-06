@@ -1,25 +1,26 @@
-import { ParentProps } from 'solid-js'
-import { APIVersion, checkIfAvailable, isVersionAtLeast } from '../api/version'
-import { WebApp } from '../types/telegram-webapp'
+import { ParentProps } from "solid-js";
+import { APIVersion, useTelegramVersion } from "../api/version";
 
-export function VersionContainer(
+export function TelegramVersionContainer(
   props: ParentProps<
     { ifVersionAtLeast: APIVersion } | { ifAvailable: keyof WebApp }
   >,
 ) {
-  if ('ifVersionAtLeast' in props) {
+  const { isVersionAtLeast, checkIfAvailable } = useTelegramVersion();
+
+  if ("ifVersionAtLeast" in props) {
     if (isVersionAtLeast(props.ifVersionAtLeast)) {
-      return <>{props.children}</>
+      return <>{props.children}</>;
     } else {
-      return null
+      return null;
     }
-  } else if ('ifAvailable' in props) {
+  } else if ("ifAvailable" in props) {
     if (checkIfAvailable(props.ifAvailable)) {
-      return <>{props.children}</>
+      return <>{props.children}</>;
     } else {
-      return null
+      return null;
     }
   } else {
-    return null
+    return null;
   }
 }

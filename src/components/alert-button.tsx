@@ -1,38 +1,39 @@
-import { createSignal, mergeProps, Show } from 'solid-js'
-import { JSX } from 'solid-js/jsx-runtime'
-import { Alert } from './alert'
+import { createSignal, mergeProps, Show } from "solid-js";
+import { JSX } from "solid-js/jsx-runtime";
+import { TelegramAlert } from "./alert";
 
-export type AlertButtonProps = JSX.ButtonHTMLAttributes<HTMLButtonElement> & {
-  children: JSX.Element
-  message: string
-  onAlertClose?: () => void
-}
+export type TelegramAlertButtonProps =
+  JSX.ButtonHTMLAttributes<HTMLButtonElement> & {
+    children: JSX.Element;
+    message: string;
+    onAlertClose?: () => void;
+  };
 
-export function AlertButton(props: AlertButtonProps) {
-  let [showAlert, setShowAlert] = createSignal(false)
+export function TelegramAlertButton(props: TelegramAlertButtonProps) {
+  let [showAlert, setShowAlert] = createSignal(false);
 
   const merged = mergeProps(props, {
-    onClick: (e) => {
-      setShowAlert(true)
+    onClick: (e: any) => {
+      setShowAlert(true);
 
-      if (props.onClick && typeof props.onClick == 'function') {
-        props.onClick(e)
+      if (props.onClick && typeof props.onClick == "function") {
+        props.onClick(e);
       }
     },
-  })
+  });
 
   return (
     <>
       <button {...merged}>{props.children}</button>
       <Show when={showAlert()}>
-        <Alert
+        <TelegramAlert
           message={props.message}
           onButtonClick={() => {
-            props.onAlertClose?.()
-            setShowAlert(false)
+            props.onAlertClose?.();
+            setShowAlert(false);
           }}
         />
       </Show>
     </>
-  )
+  );
 }

@@ -1,21 +1,23 @@
-import { Accessor, Setter, createSignal, createEffect } from 'solid-js'
+import { Accessor, createSignal, createEffect } from "solid-js";
 
-export type MainButtonContext = ReturnType<typeof createMainButtonContext>
+export type MainButtonContext = ReturnType<typeof createMainButtonContext>;
 
-export function createMainButtonContext() {
-  const originalText = window.Telegram.WebApp.MainButton.text
+export const createMainButtonContext = (
+  TelegramInstance: Accessor<Telegram | null>,
+) => {
+  const originalText = TelegramInstance()?.WebApp.MainButton.text || "";
 
   const [visible, setVisible] = createSignal(
-    window.Telegram.WebApp.MainButton.isVisible,
-  )
+    TelegramInstance()?.WebApp.MainButton.isVisible,
+  );
   const [active, setActive] = createSignal(
-    window.Telegram.WebApp.MainButton.isActive,
-  )
+    TelegramInstance()?.WebApp.MainButton.isActive,
+  );
   const [progressVisible, setProgressVisible] = createSignal(
-    window.Telegram.WebApp.MainButton.isProgressVisible,
-  )
-  const [mandatory, setMandatory] = createSignal(false)
-  const [text, setText] = createSignal<string | null>(originalText)
+    TelegramInstance()?.WebApp.MainButton.isProgressVisible,
+  );
+  const [mandatory, setMandatory] = createSignal(false);
+  const [text, setText] = createSignal<string | null>(originalText);
 
   const mainButton = {
     visible,
@@ -28,49 +30,50 @@ export function createMainButtonContext() {
     setMandatory,
     text,
     setText,
-  }
+  };
 
   createEffect(function updateVisibility() {
     if (mainButton.visible()) {
-      console.log('showing main button')
-      window.Telegram.WebApp.MainButton.show()
+      console.log("showing main button");
+      TelegramInstance()?.WebApp.MainButton.show();
     } else {
-      console.log('hiding main button')
-      window.Telegram.WebApp.MainButton.hide()
+      console.log("hiding main button");
+      TelegramInstance()?.WebApp.MainButton.hide();
     }
-  })
+  });
 
   createEffect(function updateText() {
-    if (mainButton.text()) {
-      window.Telegram.WebApp.MainButton.setText(mainButton.text())
+    const mainButtonText = mainButton.text();
+    if (mainButtonText) {
+      TelegramInstance()?.WebApp.MainButton.setText(mainButtonText);
     } else {
-      window.Telegram.WebApp.MainButton.setText(originalText)
+      TelegramInstance()?.WebApp.MainButton.setText(originalText);
     }
-  })
+  });
 
   createEffect(function updateProgressVisibility() {
     if (mainButton.progressVisible()) {
-      window.Telegram.WebApp.MainButton.showProgress()
+      TelegramInstance()?.WebApp.MainButton.showProgress();
     } else {
-      window.Telegram.WebApp.MainButton.hideProgress()
+      TelegramInstance()?.WebApp.MainButton.hideProgress();
     }
-  })
+  });
 
   createEffect(function updateActive() {
     if (mainButton.active()) {
-      window.Telegram.WebApp.MainButton.enable()
+      TelegramInstance()?.WebApp.MainButton.enable();
     } else {
-      window.Telegram.WebApp.MainButton.disable()
+      TelegramInstance()?.WebApp.MainButton.disable();
     }
-  })
+  });
 
   createEffect(function updateMandatory() {
     if (mainButton.mandatory()) {
-      window.Telegram.WebApp.enableClosingConfirmation()
+      TelegramInstance()?.WebApp.enableClosingConfirmation();
     } else {
-      window.Telegram.WebApp.disableClosingConfirmation()
+      TelegramInstance()?.WebApp.disableClosingConfirmation();
     }
-  })
+  });
 
   return {
     visible: mainButton.visible,
@@ -83,5 +86,5 @@ export function createMainButtonContext() {
     setText: mainButton.setText,
     mandatory: mainButton.mandatory,
     setMandatory: mainButton.setMandatory,
-  }
-}
+  };
+};

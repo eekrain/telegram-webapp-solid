@@ -1,7 +1,9 @@
-export function getUser() {
-  return window.Telegram.WebApp.initDataUnsafe.user
-}
+import { useTelegramAPI } from "../context";
 
-export function useUser() {
-  return getUser
+export function useTelegramUser() {
+  const { TelegramInstance } = useTelegramAPI();
+
+  const getUser = () => TelegramInstance()?.WebApp.initDataUnsafe.user;
+
+  return getUser;
 }

@@ -1,21 +1,24 @@
-import { mergeProps } from 'solid-js'
-import { JSX } from 'solid-js/jsx-runtime'
-import { HapticForce, hapticImpact } from '../api/haptic'
+import { mergeProps } from "solid-js";
+import { JSX } from "solid-js/jsx-runtime";
+import { HapticForce, useTelegramHapticImpact } from "../api/haptic";
 
-export type HapticButtonProps = JSX.ButtonHTMLAttributes<HTMLButtonElement> & {
-  children: JSX.Element
-  hapticForce?: HapticForce
-}
+export type TelegramHapticButtonProps =
+  JSX.ButtonHTMLAttributes<HTMLButtonElement> & {
+    children: JSX.Element;
+    hapticForce?: HapticForce;
+  };
 
-export function HapticButton(props: HapticButtonProps) {
+export function TelegramHapticButton(props: TelegramHapticButtonProps) {
+  const hapticImpact = useTelegramHapticImpact();
+
   const merged = mergeProps(props, {
-    onClick: (e) => {
-      hapticImpact(props.hapticForce ?? 'medium')
-      if (props.onClick && typeof props.onClick == 'function') {
-        props.onClick(e)
+    onClick: (e: any) => {
+      hapticImpact(props.hapticForce ?? "medium");
+      if (props.onClick && typeof props.onClick == "function") {
+        props.onClick(e);
       }
     },
-  })
+  });
 
-  return <button {...merged}>{props.children}</button>
+  return <button {...merged}>{props.children}</button>;
 }

@@ -1,22 +1,22 @@
-import { onCleanup } from 'solid-js'
-import { useBackButton } from '../api/back-button'
-import { createHapticImpact } from '../api/haptic'
+import { onCleanup } from "solid-js";
+import { useTelegramBackButton } from "../api/back-button";
+import { createTelegramHapticImpact } from "../api/haptic";
 
-export type BackButtonProps = {
-  onClick?: () => void
-  hapticForce?: Parameters<typeof createHapticImpact>[0]
-}
+export type TelegramBackButtonProps = {
+  onClick?: () => void;
+  hapticForce?: Parameters<typeof createTelegramHapticImpact>[0];
+};
 
-export function BackButton(props: BackButtonProps) {
-  const backButton = useBackButton({
+export function TelegramBackButton(props: TelegramBackButtonProps) {
+  const backButton = useTelegramBackButton({
     onClick: props.onClick,
     hapticForce: props.hapticForce,
     show: true,
-  })
+  });
 
   onCleanup(() => {
-    backButton.setVisible(false)
-  })
+    backButton.setVisible(false);
+  });
 
-  return null
+  return null;
 }

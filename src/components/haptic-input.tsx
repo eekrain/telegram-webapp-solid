@@ -1,17 +1,19 @@
-import { mergeProps } from 'solid-js'
-import { JSX } from 'solid-js/jsx-runtime'
-import { hapticSelection } from '../api/haptic'
+import { mergeProps } from "solid-js";
+import { JSX } from "solid-js/jsx-runtime";
+import { createTelegramHapticSelection } from "../api/haptic";
 
-export type HapticInputProps = JSX.InputHTMLAttributes<HTMLInputElement> & {
-  children?: JSX.Element
-}
+export type TelegramHapticInputProps =
+  JSX.InputHTMLAttributes<HTMLInputElement> & {
+    children?: JSX.Element;
+  };
 
-export function HapticInput(props: HapticInputProps) {
+export function TelegramHapticInput(props: TelegramHapticInputProps) {
+  const hapticSelection = createTelegramHapticSelection();
   const merged = mergeProps(props, {
-    onselectionchange: (e) => {
-      hapticSelection()
+    onselectionchange: (e: any) => {
+      hapticSelection();
     },
-  })
+  });
 
-  return <input {...merged}>{props.children}</input>
+  return <input {...merged}>{props.children}</input>;
 }

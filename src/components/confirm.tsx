@@ -1,27 +1,30 @@
-import { createSignal, onCleanup, onMount } from 'solid-js'
+import { createSignal, onCleanup, onMount } from "solid-js";
+import { useTelegramAPI } from "../context";
 
-export type ConfirmProps = {
-  message: string
-  onButtonClick?: (pressedTrue) => void
-}
+export type TelegramConfirmProps = {
+  message: string;
+  onButtonClick?: (pressedTrue: boolean) => void;
+};
 
-const [alreadyOpened, setAlreadyOpened] = createSignal(false)
+const [alreadyOpened, setAlreadyOpened] = createSignal(false);
 
-export function Confirm(props: ConfirmProps) {
+export function TelegramConfirm(props: TelegramConfirmProps) {
+  const { TelegramInstance } = useTelegramAPI();
+
   onMount(() => {
     if (alreadyOpened()) {
-      throw new Error('Confirm can only be opened once')
+      throw new Error("Confirm can only be opened once");
     } else {
-      window.Telegram.WebApp.showConfirm(props.message, (pressedTrue) => {
-        props.onButtonClick(pressedTrue)
-      })
-      setAlreadyOpened(true)
+      TelegramInstance()?.WebApp.showConfirm(props.message, (pressedTrue) => {
+        if (props.onButtonClick) props.onButtonClick(pressedTrue);
+      });
+      setAlreadyOpened(true);
     }
-  })
+  });
 
   onCleanup(() => {
-    setAlreadyOpened(false)
-  })
+    setAlreadyOpened(false);
+  });
 
-  return null
+  return null;
 }

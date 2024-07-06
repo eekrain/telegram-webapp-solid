@@ -1,13 +1,9 @@
-import { WebAppInitData } from "../types/telegram-webapp";
+import { useTelegramAPI } from "../context";
 
-export function sendData(data: string) {
-  window.Telegram.WebApp.sendData(data);
-}
+export const useTelegramDataAPI = () => {
+  const { TelegramInstance } = useTelegramAPI();
+  const getData = () => TelegramInstance()?.WebApp.initDataUnsafe;
+  const sendData = (data: string) => TelegramInstance()?.WebApp.sendData(data);
 
-export function getData(): WebAppInitData {
-  return window.Telegram.WebApp.initDataUnsafe;
-}
-
-export function useData(): [initData: WebAppInitData, sendData: (data: string) => void] {
-  return [getData(), sendData];
-}
+  return [getData, sendData];
+};

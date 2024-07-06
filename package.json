@@ -17,6 +17,7 @@
   "license": "GPL-3.0-or-later",
   "devDependencies": {
     "@types/node": "^18.11.18",
+    "@types/telegram-web-app": "^7.2.1",
     "autoprefixer": "^10.4.13",
     "daisyui": "^2.46.1",
     "hex-to-hsl": "^1.0.2",
@@ -27,6 +28,7 @@
     "vite-plugin-solid": "^2.5.0"
   },
   "dependencies": {
+    "@solid-primitives/script-loader": "^2.2.0",
     "solid-js": "^1.6.6"
   },
   "peerDependencies": {
